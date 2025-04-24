@@ -1,0 +1,21 @@
+{
+    "dependencies": {
+        "dockerode": "^4.0.6",
+        "express": "^5.1.0"
+    },
+    "devDependencies": {
+        "@types/dockerode": "^3.3.38",
+        "@types/express": "^5.0.1",
+        "typescript": "^5.8.3"
+    },
+    "name": "docker-controller",
+    "version": "1.0.0",
+    "main": "dist/index.js",
+    "scripts": {
+        "start": "dist/index.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "description": ""
+}

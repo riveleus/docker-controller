@@ -1,0 +1,43 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Build Docker image
+        run: |
+          docker build -t docker-controller:latest .
+          docker save docker-controller:latest > docker-controller.tar
+          chmod 664 docker-controller.tar
+
+      - name: Transfer Docker image to VPS
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSHKEY }}
+          port: 22
+          source: "docker-controller.tar"
+          target: "/tmp"
+
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSHKEY }}
+          port: 22
+          script: |
+            docker load < /tmp/docker-controller.tar
+            docker stop docker-controller || true
+            docker rm docker-controller || true
+            docker run -d --name docker-controller -v /var/run/docker.sock:/var/run/docker.sock -p 1000:1000 docker-controller:latest
