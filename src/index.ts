@@ -1,9 +1,12 @@
 import express from 'express';
 import Docker from 'dockerode';
+import cors from 'cors';
 
 const docker = new Docker({ socketPath: '/var/run/docker.sock' });
 
 const app = express();
+
+app.use(cors())
 app.use(express.json());
 
 app.post('/restart', async (req, res) => {
