@@ -40,4 +40,4 @@ jobs:
             docker load < /tmp/docker-controller.tar
             docker stop docker-controller || true
             docker rm docker-controller || true
-            docker run -d --name docker-controller -v /var/run/docker.sock:/var/run/docker.sock -p 1000:1000 docker-controller:latest
+            docker run -d --name docker-controller -v /var/run/docker.sock:/var/run/docker.sock --network shared-net -p 1000:1000 docker-controller:latest
